@@ -1,0 +1,23 @@
+{% extends 'web_app/base.html' %}
+
+{% block content %}
+{% if not messages %}
+<section class="main">
+    <div class="container container-logout">
+        <div class="wrapper-logout">
+            <h1 class="pt-5">Jus sėkmingai atsijungėte.</h1>
+            <div class="border-top mt-3">
+                <small class="text-muted"><a href="{% url 'login' %}">Prisijungti atgal?</a></small>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="main" style="margin-top: 0;">
+    <div class="container container-logout">
+        <div class="wrapper-logout"></div>
+    </div>
+    </div>
+</section>
+{% endif %}
+{% endblock content %}

@@ -1,0 +1,14 @@
+{% extends 'web_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="main main-fixed">
+    <div class="container container-fixed">
+        <form action="" method="POST" novalidate>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <button class="btn btn-custom btn-outline-info" type="submit">Registruotis</button>
+        </form>
+    </div>
+</section>
+{% endblock content %}

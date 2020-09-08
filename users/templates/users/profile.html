@@ -1,0 +1,42 @@
+{% extends 'web_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="main" style="margin-top: 0px;">
+    <div class="container container-main">
+        <div class="profile-pic">
+            <img class="account-img mr-3" src="{{ user.profile.image.url }}" alt="">
+            <h2 style="font-size: 24px;">{{ user.username }}</h2>
+            {% if request.user == user %}
+            <a href="{% url 'profile-update' user.username %}"><button class="btn btn-custom btn-outline-info"
+                    id='btn-upload2' type="button">Keisti paskyrą</button></a>
+            {% endif %}
+        </div>
+        {% if posts %}
+        <div class="profile-videos">
+            {% for post in posts %}
+            <div class="wrapper-main">
+                <div class="video-main">
+                    <video width='375' height="240" controls>
+                        <source src='{{ post.video.url }}' type='video/mp4'>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="text-main">
+                    <a href="{% url 'post-detail' post.pk %}">
+                        <p>{{ post.title }} (uploaded by {{ post.user }})</p>
+                    </a>
+                    <p>{{ post.likes }} likes</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="profile-videos-none">
+            <h1>Šis vartotojas dar neįkėlė videoįrašų.</h1>
+        </div>
+        {% endif %}
+        {% include 'web_app/pages.html' %}
+    </div>
+</section>
+{% endblock content %}

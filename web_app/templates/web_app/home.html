@@ -1,0 +1,27 @@
+{% extends 'web_app/base.html' %}
+
+{% block content %}
+<section class="main">
+    <div class="container container-main">
+        <div id='home-profile-videos' class="profile-videos">
+            {% for post in posts %}
+            <div class="wrapper-main">
+                <div class="video-main">
+                    <video width='375' height="240" controls>
+                        <source src='{{ post.video.url }}' type='video/mp4'>
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                <div class="text-main">
+                    <a href="{% url 'post-detail' post.pk %}">
+                        <p>{{ post.title }} (uploaded by {{ post.user }})</p>
+                    </a>
+                    <p>{{ post.likes }} likes</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% include 'web_app/pages.html' %}
+    </div>
+</section>
+{% endblock content %}

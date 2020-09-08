@@ -1,0 +1,45 @@
+{% extends 'web_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block css %}
+<style>
+    @media only screen and (max-height: 800px) {
+        #btn-upload1 {
+            margin-top: 83px;
+        }
+    }
+</style>
+{% endblock css %}
+
+{% block content %}
+<section class="main main-fixed">
+    <div class="container container-fixed">
+        <form action="" method="POST" enctype="multipart/form-data" novalidate
+            onsubmit="return IkeltiVideoValidatorius()">
+            <!--return stops the submission of form-->
+            {% csrf_token %}
+            <!-- {{ form|crispy }} -->
+            <div id='div_id_title' class="form-group">
+                <label for="id_title" class="requiredField">Antraštė</label>
+                <div>
+                    <input id="id_title" type="text" name="title" maxlength="150" autocapitalize="none"
+                        class="textinput textInput form-control" required>
+                    <p id="error_title_required" class="invalid-feedback"></p>
+                </div>
+            </div>
+            <div id='div_id_video' class="form-group">
+                <label for="id_video">Įkelti video</label>
+                <div class="custom-file">
+                    <input type="file" name="video" accept="video/*" required id="id_video"
+                        class="clearablefileinput custom-file-input">
+                    <p id="error_video_required" class="invalid-feedback" style="margin-top: 15px;"></p>
+                    <label for="id_video" id='video-text-color'
+                        class="requiredField form-control custom-file-label">Spauskite
+                        čia...</label>
+                </div>
+            </div>
+            <button class="btn btn-custom btn-outline-info" id='btn-upload1' type="submit">Skelbti</button>
+        </form>
+    </div>
+</section>
+{% endblock content %}

@@ -1,0 +1,49 @@
+{% extends 'web_app/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<section class="main">
+    <div class="container container-main">
+        <div class="wrapper-update">
+            <h3>Keisti nuotrauką</h3>
+            <form action="" method="POST" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+                <div class="profile-pic-update">
+                    <img class="account-img mr-3" src="{{ user.profile.image.url }}" alt="">
+                    <div id='div_id_image' class="form-group">
+                        <div class="custom-file">
+                            <input type="file" name="image" accept="image/*" id="id_image"
+                                class="clearablefileinput custom-file-input">
+                            <label for="id_image" id='image-text-color'
+                                class="form-control custom-file-label">Keisti</label>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <h3>Keisti slaptažodį</h3>
+                {% if u_form.non_field_errors %}
+                <div class="non-field-errors">
+                    {% for error in u_form.non_field_errors %}
+                    <p class="form-error" style="color: tomato;">{{error}}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% for field in u_form %}
+                <div id="div_id_{{ field.name }}" class="form-group">
+                    <label class="requiredField label-password" for="{{ field.name }}">{{ field.label }}</label>
+                    <div class="">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                    {% for error in field.errors %}
+                    <p class="invalid-feedback-custom"><strong>{{ error|escape }}</strong></p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+                <button id="btn-update" class="btn btn-custom btn-outline-info" type="submit">Saugoti</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock content %}

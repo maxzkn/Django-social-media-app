@@ -1,0 +1,132 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{% static 'web_app/main.css' %}">
+
+    {% if title %}
+    <title>Web App - {{ title }}</title>
+    {% else %}
+    <title>Web App</title>
+    {% endif %}
+</head>
+
+{% block css %}
+{% endblock css %}
+
+<body>
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="navbar-popup">
+            <div class="container-fluid">
+                <a class="navbar-brand mr-4" href="{% url 'home' %}">Logo</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle"
+                    aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarToggle">
+                    <!-- Navbar Right Side -->
+                    <div class="navbar-nav">
+                        {% if request.user.is_authenticated %}
+                        <a class="nav-item nav-link" href="{% url 'post-upload' %}">Įkelti video</a>
+                        <a class="nav-item nav-link" href="{% url 'profile' user.username %}">Profilis</a>
+                        <a class="nav-item nav-link" href="{% url 'logout' %}">Atsijungti</a>
+                        {% else %}
+                        <a class="nav-item nav-link" href="{% url 'register' %}">Registruotis</a>
+                        <a class="nav-item nav-link" href="{% url 'login' %}">Prisijungti</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" style="margin-top: 56px;">
+        {{ message }}
+    </div>
+    <section class="main" style="margin-top: 0;">
+        {% block content-with-message %}
+        {% endblock content-with-message %}
+    </section>
+    {% endfor %}
+    {% endif %}
+    {% block content %}
+    {% endblock content %}
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+    <script>
+
+        // Add the following code if you want the name of the file appear on select
+        $(".custom-file-input").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
+        });
+
+        function IkeltiVideoValidatorius() {
+            var title_input = document.getElementById("id_title");
+            var video_input = document.getElementById("id_video");
+            if (title_input.value == '' && video_input.value == '') {
+                document.getElementById('id_title').classList.add('is-invalid')
+                document.getElementById('id_video').classList.add('is-invalid')
+                document.getElementById("error_title_required")
+                    .innerHTML = "<strong>Šis laukas yra privalomas.</strong>";
+                document.getElementById("error_video_required")
+                    .innerHTML = "<strong>Šis laukas yra privalomas.</strong>";
+                return false; // stops the submission of form
+            }
+            if (title_input.value == '' || video_input.value == '') {
+                if (title_input.value == '') {
+                    document.getElementById('id_title').classList.add('is-invalid')
+                    document.getElementById("error_title_required")
+                        .innerHTML = "<strong>Šis laukas yra privalomas.</strong>";
+                    return false; // stops the submission of form
+                }
+                if (video_input.value == '') {
+                    document.getElementById('id_video').classList.add('is-invalid')
+                    document.getElementById("error_video_required")
+                        .innerHTML = "<strong>Šis laukas yra privalomas.</strong>";
+                    return false; // stops the submission of form
+                }
+
+            }
+            return true;
+        }
+
+        function KeistiAntraste() {
+            document.getElementById('popup-background').style.display = 'block';
+        }
+
+        function UzdarytiPopup() {
+            document.getElementById('popup-background').style.display = 'none';
+        }
+
+        function KeistiAntrasteValidatorius() {
+            var title_input = document.getElementById("id_title");
+            if (title_input.value == '') {
+                document.getElementById('id_title').classList.add('custom-invalid')
+                document.getElementById("error_title_required")
+                    .innerHTML = "<strong>Pakeiskite pavadinimą.</strong>";
+                return false; // stops the submission of form
+            }
+            return true;
+        } 
+    </script>
+</body>
+
+</html>

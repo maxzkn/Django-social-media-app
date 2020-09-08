@@ -1,0 +1,104 @@
+{% extends 'web_app/base.html' %}
+
+{% block content %}
+<section class="main">
+    <div class="container container-main" id="container-popup">
+        <div id="popup-background">
+            <div id="popup-title" class="popupTitle">
+                <p>Keisti antraštę</p>
+                <form action="{% url 'post-update' post.pk %}" method="POST" novalidate
+                    onsubmit='return KeistiAntrasteValidatorius()'>
+                    {% csrf_token %}
+                    <input id="id_title" type="text" name="title" maxlength="150" autocapitalize="none"
+                        class="textinput textInput title-input" required>
+                    <p id="error_title_required" class="custom-error-text"></p>
+                    <!-- errors: -->
+                    {% if title_form.errors %}
+                    {% for field in title_form %}
+                    {% for error in field.errors %}
+                    <p class="invalid-feedback-custom"><strong>{{ error|escape }}</strong></p>
+                    {% endfor %}
+                    {% endfor %}
+                    {% endif %}
+                    <div class="title-button-wrapper">
+                        <button class="button-popup" id="button-change-title" type="submit">Saugoti</button>
+                        <button class="button-popup" id="button-decline" type="button"
+                            onclick="UzdarytiPopup()">Atšaukti</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id='video-detail' class="profile-videos">
+            <div class="" style="width: 963px">
+                <div class="text-main">
+                    <p>Įkėlė: <a href="{% url 'profile' post.user.username %}">{{ post.user }}</a></p>
+                    <p>{{ post.date_posted|date:'Y-m-d' }}</p>
+                </div>
+                <video width='963' controls>
+                    <source src='{{ post.video.url }}' type='video/mp4'>
+                    Your browser does not support the video tag.
+                </video>
+                <div class="text-main">
+                    <p>{{ post.title }} (uploaded by {{ post.user }})</p>
+                    {% if not request.user.is_authenticated %}
+                    <p>{{ post.liked.all.count }} likes</p>
+                    {% else %}
+                    {% if request.user == post.user or request.user.is_superuser %}
+                    <div class="form-wrapper">
+                        <form action="{% url 'post-delete' post.id %}" method="POST" class="text-main"
+                            id="button-delete">
+                            {% csrf_token %}
+                            <button class="btn btn-custom btn-outline-info" id="btn-like"
+                                type="submit">Ištrinti</button>
+                        </form>
+                        <button class="btn btn-custom btn-outline-info" id="btn-update2" type="button"
+                            onclick="KeistiAntraste()">Keisti antraštę</button>
+                    </div>
+                    {% endif %}
+                    <form action="{% url 'post-like' post.id %}" method="POST" class="text-main">
+                        {% csrf_token %}
+                        <!-- <input type="hidden" name="post_id" value="{{ post.id }}"> -->
+                        <p style="margin-right: 7px">{{ post.liked.all.count }} patiktukai</p>
+                        {% if request.user not in post.liked.all %}
+                        <button class="btn btn-custom btn-outline-info" id="btn-like" type="submit">Patinka</button>
+                        {% else %}
+                        <button class="btn btn-custom btn-outline-info" id="btn-like" type="submit">Daugiau
+                            nepatinka</button>
+                        {% endif %}
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="comments-wrapper">
+                <h5>Komentarai</h5>
+                {% for comment in comments %}
+                <p>{{ comment.posted_by }}</p>
+                <p>{{ comment.comment }}</p>
+                <hr>
+                {% endfor %}
+                {% if user.is_authenticated %}
+                <h5>Rašyti komentarą:</h5>
+                <form action="" method="POST" novalidate>
+                    {% csrf_token %}
+                    <label for="id_comment"></label>
+                    <textarea class="form-control-update form-control-comment" name="comment"
+                        placeholder="Jūsų komentaras čia..." maxlength="400" id="id_comment"></textarea>
+                    {% if comment_form.errors %}
+                    {% for field in comment_form %}
+                    {% for error in field.errors %}
+                    <p class="invalid-feedback-custom"><strong>{{ error|escape }}</strong></p>
+                    {% endfor %}
+                    {% endfor %}
+                    {% endif %}
+                    <button class="btn btn-custom btn-outline-info" id="btn-upload3" type="submit">Skelbti</button>
+                </form>
+                {% else %}
+                <h5>Esate neprisijungęs, kad rašyti komentarus</h5>
+                <a style="text-decoration: none;" href="{% url 'login' %}"><button
+                        class="btn btn-custom btn-outline-info" id='btn-upload3' type="submit">Prisijungti</button></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

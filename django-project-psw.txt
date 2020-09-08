@@ -1,0 +1,2 @@
+max@test.com Test123456 - admin
+test1@test.com Test123456 - test user
