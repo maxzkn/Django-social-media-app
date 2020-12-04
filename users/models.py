@@ -21,6 +21,13 @@ class EmailBackend(ModelBackend):
         User = get_user_model()
         # model = User.objects.get()
         try:
+            # this allows the username value provided by a user to be treated
+            # as an email field for authentication purposes. If a user matches
+            # the email provided as the username value, then the
+            # try-except-else block# performs a call to check_password()
+            # to validate the password against the matching user. If the
+            # password matches, authenticate() returns the authenticated user,
+            # if the password doesn't match authententicate() returns None.
             user = User.objects.get(email=username)
         except User.DoesNotExist:
             raise ValidationError("Įvesti neteisingi duomenys.")
@@ -126,8 +133,15 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.username} Profile"
 
-    # automatically resize the uploaded image:
+    # automatically resize the image file that user uploads:
+    # save() is a method that gets run after our model is saved
+    # (it already exists in our parent class, so we're gonna override it):
     def save(self, *args, **kwargs):
+        # run save method of our parent class using super() before resizing, otherwise we'll have an error:
+        # no such file or directory.
+        # when overriding model's save method in Django, we should also pass
+        # *args and **kwargs to overridden method!!!
+        # Otherwise, we get 'TypeError - save() got an unexpected keyword argument 'force_insert' error'
         super().save(*args, **kwargs)
         img = Image.open(self.image.path)
         # if we get "cannot write mode P as JPEG" error, convert to RGB:

@@ -126,6 +126,10 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self, **kwargs):
         post = get_object_or_404(Post, pk=self.kwargs.get("pk"))
         user = post.user
+        # lazy version of the reverse URL resolver. Unlike the traditional reverse function,
+        # reverse_lazy won't execute until the value is needed.
+        # It is useful because it prevent 'Reverse Not Found' exceptions when working with
+        # URLs that may not be immediately known.It’s prevent to occur error when URLConf is not loaded:
         return reverse_lazy("profile", kwargs={"username": user.username})
 
 
@@ -175,6 +179,10 @@ def post_upload(request):
             # title = form.cleaned_data.get("title")
             # video = form.cleaned_data.get("video")
             # without user error: NOT NULL constraint failed: users_post.user_id:
+            # You need to add the value of the user field in Post object.
+            # For that, before saving the post, you can attach the user from request.user.
+            # Using form.save(commit=False) will create a Post instance 'in memory', but not yet saved
+            # in the Database, then add the user to that Post instance (add some changes before saving it)
             post = form.save(commit=False)
             post.user = request.user
             # post.title = title
