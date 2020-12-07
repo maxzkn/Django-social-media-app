@@ -17,6 +17,8 @@ from django.views.generic.edit import FormMixin
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+import os
+from django.conf import settings
 
 # Create your views here.
 
@@ -126,6 +128,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self, **kwargs):
         post = get_object_or_404(Post, pk=self.kwargs.get("pk"))
         user = post.user
+        os.remove(os.path.join(settings.MEDIA_ROOT, f"{post.video}".replace('/', '\\')))
         # lazy version of the reverse URL resolver. Unlike the traditional reverse function,
         # reverse_lazy won't execute until the value is needed.
         # It is useful because it prevent 'Reverse Not Found' exceptions when working with
